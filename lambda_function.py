@@ -120,7 +120,7 @@ class QuizHandler(AbstractRequestHandler):
 
         question = util.ask_question(handler_input)
         response_builder = handler_input.response_builder
-        response_builder.speak(data.START_QUIZ_MESSAGE + question)
+        response_builder.speak(data.START_QUIZ_MESSAGE + ("Here is your {} question. ").format(util.get_ordinal_indicator(attr["counter"])) + question)
         response_builder.ask(question)
         logger.info("after question asked")
 
@@ -166,62 +166,62 @@ class QuizHandler(AbstractRequestHandler):
         return response_builder.response
 
 
-class DefinitionHandler(AbstractRequestHandler):
-    """Handler for providing states info to the users.
+# class DefinitionHandler(AbstractRequestHandler):
+#     """Handler for providing states info to the users.
 
-    This handler is triggered when the QUIZ is not started and the
-    user asks for a specific state, capital, statehood order, statehood
-    year or abbreviation. Similar to the quiz handler, the information
-    is added to the Card or the RenderTemplate after checking if that
-    is supported.
-    """
-    def can_handle(self, handler_input):
-        # type: (HandlerInput) -> bool
-        attr = handler_input.attributes_manager.session_attributes
-        return (is_intent_name("AnswerIntent")(handler_input) and
-                attr.get("state") != "QUIZ")
+#     This handler is triggered when the QUIZ is not started and the
+#     user asks for a specific state, capital, statehood order, statehood
+#     year or abbreviation. Similar to the quiz handler, the information
+#     is added to the Card or the RenderTemplate after checking if that
+#     is supported.
+#     """
+#     def can_handle(self, handler_input):
+#         # type: (HandlerInput) -> bool
+#         attr = handler_input.attributes_manager.session_attributes
+#         return (is_intent_name("AnswerIntent")(handler_input) and
+#                 attr.get("state") != "QUIZ")
 
-    def handle(self, handler_input):
-        # type: (HandlerInput) -> Response
-        logger.info("In DefinitionHandler")
-        response_builder = handler_input.response_builder
-        item, is_resolved = util.get_item(
-            slots=handler_input.request_envelope.request.intent.slots,
-            states_list=data.STATES_LIST)
+#     def handle(self, handler_input):
+#         # type: (HandlerInput) -> Response
+#         logger.info("In DefinitionHandler")
+#         response_builder = handler_input.response_builder
+#         item, is_resolved = util.get_item(
+#             slots=handler_input.request_envelope.request.intent.slots,
+#             states_list=data.STATES_LIST)
 
-        if is_resolved:
-            if data.USE_CARDS_FLAG:
-                response_builder.set_card(
-                    ui.StandardCard(
-                        title=util.get_card_title(item),
-                        text=util.get_card_description(item),
-                        image=ui.Image(
-                            small_image_url=util.get_small_image(item),
-                            large_image_url=util.get_large_image(item)
-                        )))
+#         if is_resolved:
+#             if data.USE_CARDS_FLAG:
+#                 response_builder.set_card(
+#                     ui.StandardCard(
+#                         title=util.get_card_title(item),
+#                         text=util.get_card_description(item),
+#                         image=ui.Image(
+#                             small_image_url=util.get_small_image(item),
+#                             large_image_url=util.get_large_image(item)
+#                         )))
 
-            if util.supports_display(handler_input):
-                img = Image(
-                    sources=[ImageInstance(url=util.get_large_image(item))])
-                title = util.get_card_title(item)
-                primary_text = get_plain_text_content(
-                    primary_text=util.get_card_description(item))
+#             if util.supports_display(handler_input):
+#                 img = Image(
+#                     sources=[ImageInstance(url=util.get_large_image(item))])
+#                 title = util.get_card_title(item)
+#                 primary_text = get_plain_text_content(
+#                     primary_text=util.get_card_description(item))
 
-                response_builder.add_directive(
-                    RenderTemplateDirective(
-                        BodyTemplate2(
-                            back_button=BackButtonBehavior.VISIBLE,
-                            image=img, title=title,
-                            text_content=primary_text)))
+#                 response_builder.add_directive(
+#                     RenderTemplateDirective(
+#                         BodyTemplate2(
+#                             back_button=BackButtonBehavior.VISIBLE,
+#                             image=img, title=title,
+#                             text_content=primary_text)))
 
-            response_builder.speak(
-                util.get_speech_description(item)).ask(data.REPROMPT_SPEECH)
+#             response_builder.speak(
+#                 util.get_speech_description(item)).ask(data.REPROMPT_SPEECH)
 
-        else:
-            response_builder.speak(
-                util.get_bad_answer(item)).ask(util.get_bad_answer(item))
+#         else:
+#             response_builder.speak(
+#                 util.get_bad_answer(item)).ask(util.get_bad_answer(item))
 
-        return response_builder.response
+#         return response_builder.response
 
 
 class QuizAnswerHandler(AbstractRequestHandler):
@@ -255,7 +255,7 @@ class QuizAnswerHandler(AbstractRequestHandler):
         #     handler_input=handler_input,
         #     value=item[item_attr])
         logger.info("about to compare tokens or slots")
-        is_ans_b = util.compare_token_or_slots(handler_input=handler_input,value="b")
+        is_ans_b = util.compare_token_or_slots(handler_input=handler_input,value="banana")
         
         # if is_ans_correct:
         #     speech = util.get_speechcon(correct_answer=True)
@@ -281,7 +281,8 @@ class QuizAnswerHandler(AbstractRequestHandler):
 
         if attr['counter'] < min(data.MAX_QUESTIONS, len(data.QUESTIONS_LIST)):
             # Ask another question
-            speech += util.get_current_score(attr["score"], attr["counter"])
+            # speech += util.get_current_score(attr["score"], attr["counter"])
+            speech += ("Here is your {} question. ").format(util.get_ordinal_indicator(attr["counter"] + 1))
             question = util.ask_question(handler_input)
             speech += question
             reprompt = question
@@ -325,7 +326,7 @@ class QuizAnswerHandler(AbstractRequestHandler):
             return response_builder.speak(speech).ask(reprompt).response
         else:
             # Finished all questions.
-            speech += util.get_final_score(attr["score"], attr["counter"])
+            # speech += util.get_final_score(attr["score"], attr["counter"])
             speech += data.EXIT_SKILL_MESSAGE
             speech += data.LP_PREFIX
             speech += data.LP_LIST[attr["score"] % len(data.LP_LIST)]
@@ -474,7 +475,7 @@ class ResponseLogger(AbstractResponseInterceptor):
 # Add all request handlers to the skill.
 sb.add_request_handler(LaunchRequestHandler())
 sb.add_request_handler(QuizHandler())
-sb.add_request_handler(DefinitionHandler())
+# sb.add_request_handler(DefinitionHandler())
 sb.add_request_handler(QuizAnswerHandler())
 sb.add_request_handler(QuizAnswerElementSelectedHandler())
 sb.add_request_handler(RepeatHandler())

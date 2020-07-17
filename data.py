@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 LP_LIST = [
-    "Customer Obsession",
+    "Customer Obsession: Leaders start with the customer and work backwards. They work vigorously to earn and keep customer trust. Although leaders pay attention to competitors, they obsess over customers.",
     "Ownership",
     "Invent and Simplify",
     "Are Right, A Lot",
@@ -18,10 +18,10 @@ LP_LIST = [
 ]
 
 QUESTIONS_LIST = [
-    "You’ve been assigned a project involving unfamiliar tools. Your first move is to: a) Search online and read the documentation for yourself; or b) Ask your mentor for a quick explanation so you can get started",
-    "You would rather: a) Invest in an idea that you believe in but is unpopular; or b) Give the majority the benefit of the doubt and commit to an alternative idea",
-    "Where are you from?",
-    "What color are your eyes?"
+    "You’re stranded on a desert island. Do you: apple) decide to leave and build yourself a boat; or banana) befriend the local monkeys by offering them coconuts",
+    "You’ve been assigned a project involving unfamiliar tools. Your first move is to: apple) Search online and read the documentation for yourself; or banana) Ask your mentor for a quick explanation so you can get started",
+    "You’re competing in The Great Amazon Cake-Off. You’re running out of time, but you realized you burnt the caramel. Do you: apple) remake the caramel and risk an overtime penalty; or do you banana) make do with what you have and finish your cake?",
+    "You’ve been given a choice of superpowers. Would you rather be able to: apple) breathe underwater so you can dive really deep; or banana) have an indestructible back?",
 ]
 
 STATES_LIST = [
@@ -283,7 +283,8 @@ SKILL_TITLE = "United States Quiz Game"
 WELCOME_MESSAGE = ("Welcome to the Leadership Principle Personality Quiz!  "
                    "I will ask you a sequence of questions "
                    "to help you determine which leadership principle you "
-                   "fit in with most.  Are you ready? ")
+                   "fit in with most. Each question has two answer choices: "
+                   "apple or banana. Say any other words to restart the quiz. Are you ready? ")
 
 START_QUIZ_MESSAGE = ("OK.  I will ask you 4 questions. ")
 
